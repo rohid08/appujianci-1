@@ -22,26 +22,18 @@ class Welcome extends CI_Controller
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/userguide3/general/urls.html
      */
-    public function index()
-    {
-        $this->load->helper('url');
-        if (isset($_POST['nama']) && isset($_POST['nim']) && isset($_POST['umur'])) {
-            $_SESSION['nama'] = $_POST['nama'];
-            $_SESSION['nim'] = $_POST['nim'];
-            $_SESSION['umur'] = $_POST['umur'];
-            redirect('Welcome/tampil');
-        }
 
+     public function index()
+    {
         $blade = new Blade(VIEWPATH, APPPATH . 'cache');
         echo $blade->make('form', [])->render();
     }
-
     public function tampil()
     
     {
-        $nama = $_SESSION['nama'];
-        $nim = $_SESSION['nim'];
-        $umur = $_SESSION['umur'];
+        $nama = $this->input->post('nama');
+        $nim = $this->input->post('nim');
+        $umur = $this->input->post('umur');
         $status = '';
 
         if ($umur >= 0 && $umur <= 10) {
@@ -54,8 +46,6 @@ class Welcome extends CI_Controller
             $status = 'Tua';
         }
 
-        session_unset();
-        session_destroy();
         $blade = new Blade(VIEWPATH, APPPATH . 'cache');
         echo $blade->make('tampil', ['nama' => $nama, 'nim' => $nim, 'umur' => $umur, 'status' => $status])->render();
     }
